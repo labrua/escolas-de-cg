@@ -1,6 +1,6 @@
 # Escolas de Campina Grande
 
-Este repositório é relacionado à dados das escolas e sua avaliação em Campina Grande, PB.
+Este repositório é relacionado à dados das escolas e suas respectivas avaliações na cidade de Campina Grande, PB.
 
 Finalidade: Esse repositório foi desenvolvido para uma proposta de pesquisa que visa investigar em diferentes regiões da cidade a quantidade e a qualidade de equipamentos urbanos relacionados à saúde, educação e transporte na esfera pública, para explorar se há correlação entre a oferta desses equipamentos e  população carcerária.
 
@@ -32,7 +32,7 @@ Após a análise, foi realizado um cruzamento de dados através de Pandas, que �
 
 <B> 5. O que você deve saber sobre os dados, incluindo limitações: </B>
 
-Os dados tem algumas limitações por faltar dados de algumas escolas, como por exemplo: localização e pontos de sua infraestrutura.
+A limitação dos dados é relacionado à falta de informações sobre algumas escolas, como por exemplo: localização e detalhes de sua infraestrutura.
 
 <B> 6. Aplicações adicionais: </B>
 
