@@ -4,19 +4,19 @@ Este repositório é relacionado à dados das escolas e sua avaliação em Campi
 
 Finalidade: Esse repositório foi desenvolvido para uma proposta de pesquisa que visa investigar em diferentes regiões da cidade a quantidade e a qualidade de equipamentos urbanos relacionados à saúde, educação e transporte na esfera pública, para explorar se há correlação entre a oferta desses equipamentos e  população carcerária.
 
-<B> 1. Finalidade original e aplicação: </ B>
+<B> 1. Finalidade original e aplicação: </B>
 
 Os dados existem com a intenção de mostrar a qualidade em cada instituição pública de ensino.
 
-<B> 2. História, padrões e formato: </ B>
+<B> 2. História, padrões e formato: </B>
 
 Os dados são foram disponibilizados em Comma-separated values (CSV).
 
-<B> 3. Contexto Organizacional: </ B>
+<B> 3. Contexto Organizacional: </B>
 
 Contextos organizacionais não afetam a natureza da qualidade dos dados.
 
-<B> 4. Fluxo de trabalho: </ B>
+<B> 4. Fluxo de trabalho: </B>
 
 Inicialmente para tornar a pesquisa possível, foi necessário um levantamento de infraestrutura e de qualidade de serviços públicos educacionais. Diante dos dados, foi necessária uma etapa de refinamento dos mesmos. O objetivo é extrair dos dados brutos já coletados, informações específicas para a pesquisa. Com o produto final do refinamento, é feito um cruzamento, a fim de criar relações entre os mesmos.
 
@@ -31,15 +31,15 @@ O IDEB é calculado por indicadores de aprendizagem extraídos de dois exames:
 Após a análise, foi realizado um cruzamento de dados através de Pandas, que é uma biblioteca de Python, específica para manipulação e análise de dados. Essa ferramenta foi escolhida baseado na confiabilidade da manipulação dos dados e na familiaridade com a tecnologia do pesquisador.
 Depois do cruzamento de dados relacionados a infraestrutura e qualidade, os mapas foram gerados através do QGIS, que é uma plataforma que permite a visualização e edição de dados georreferenciados.
 
-<B> 5. O que você deve saber sobre os dados, incluindo limitações: </ B>
+<B> 5. O que você deve saber sobre os dados, incluindo limitações: </B>
 
 Os dados tem algumas limitações por faltar dados de algumas escolas, como por exemplo: localização e pontos de sua infraestrutura.
 
-<B> 6. Aplicações adicionais: </ B>
+<B> 6. Aplicações adicionais: </B>
 
 Outras pessoas podem fazer uso desses dados com o objetivo de analisar a vitalidade urbana na cidade de Campina Grande.
 
-<B> 7. Apêndice - listagem de valores de campo, livro de códigos, etc. </ B>
+<B> 7. Apêndice - listagem de valores de campo, livro de códigos, etc. </B>
 
 Dados de infraestrutura das escolas: Dados obtidos através de requisições ao TCU
 
@@ -47,4 +47,4 @@ Avaliação do ENEM por escolas: http://ufcg.edu.br/prt_ufcg/assessoria_imprensa
 
 Avaliação do IDEB por escolas: http://portal.inep.gov.br/web/guest/educacao-basica/ideb/resultados
 
-<B> 8. Fontes / Reconhecimentos </ B>
+<B> 8. Fontes / Reconhecimentos </B>
