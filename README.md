@@ -29,7 +29,6 @@ O IDEB é calculado por indicadores de aprendizagem extraídos de dois exames:
 02. De indicadores do Censo Escolar, ou seja, relacionado índice de aprovação dos alunos ao longo dos anos letivos.
 
 Após a análise, foi realizado um cruzamento de dados através de Pandas, que é uma biblioteca de Python, específica para manipulação e análise de dados. Essa ferramenta foi escolhida baseado na confiabilidade da manipulação dos dados e na familiaridade com a tecnologia do pesquisador.
-Depois do cruzamento de dados relacionados a infraestrutura e qualidade, os mapas foram gerados através do QGIS, que é uma plataforma que permite a visualização e edição de dados georreferenciados.
 
 <B> 5. O que você deve saber sobre os dados, incluindo limitações: </B>
 
