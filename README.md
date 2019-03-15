@@ -40,10 +40,12 @@ Outras pessoas podem fazer uso desses dados com o objetivo de analisar a vitalid
 
 <B> 7. Apêndice - listagem de valores de campo, livro de códigos, etc. </B>
 
-Avaliação do ENEM por escolas: http://ufcg.edu.br/prt_ufcg/assessoria_imprensa/mostra_noticia.php?codigo=21692
+Avaliação do Exame Nacional do Ensino Médio (ENEM) por escolas, através dos microdrados disponibilizados pelo Instituto Nacional de Estudos e Pesquisas Educacionais Anísio Teixeira (INEP) para a Universidade Federal de Campina Grande (UFCG) de 2005 à 2015:
+http://ufcg.edu.br/prt_ufcg/assessoria_imprensa/mostra_noticia.php?codigo=21692
 
-Avaliação do IDEB por escolas: http://portal.inep.gov.br/web/guest/educacao-basica/ideb/resultados
+Avaliação do Índice de Desenvolvimento de Educação Básica (IDEB) por escolas, através dos microdrados disponibilizados pelo Instituto Nacional de Estudos e Pesquisas Educacionais Anísio Teixeira (INEP) de 2005 à 2017:
+http://portal.inep.gov.br/web/guest/educacao-basica/ideb/resultados
 
 <B> 8. Fontes / Reconhecimentos </B>
 
-Dados de infraestrutura das escolas: Dados obtidos através de requisições ao TCU
+Dados de infraestrutura das escolas: Dados obtidos através de requisições ao Tribunal de Contas da União (TCU) de 2015
