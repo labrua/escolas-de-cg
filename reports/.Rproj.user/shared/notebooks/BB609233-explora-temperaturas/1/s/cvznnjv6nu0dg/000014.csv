@@ -1,3 +1,0 @@
-"0","enem_recente %>%"
-"0","    ggplot(aes(x = NU_MEDIA_RED)) +"
-"0","    geom_histogram(binwidth = 10, color = ""#F6511D"", fill = ""white"")"
