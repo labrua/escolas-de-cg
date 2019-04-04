@@ -1,0 +1,29 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1554340908327.000,
+    "dirty" : false,
+    "encoding" : "",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "D7EEFFCA",
+    "lastKnownWriteTime" : 7021797280558114095,
+    "last_content_update" : 1554340908327,
+    "path" : null,
+    "project_path" : null,
+    "properties" : {
+        "cacheKey" : "BAAAFBBC",
+        "caption" : "ideb_anos_iniciais",
+        "contentUrl" : "grid_resource/gridviewer.html?env=&obj=ideb_anos_iniciais&cache_key=BAAAFBBC",
+        "displayedObservations" : "64",
+        "environment" : "",
+        "object" : "ideb_anos_iniciais",
+        "preview" : "0",
+        "totalObservations" : "64",
+        "variables" : "172"
+    },
+    "relative_order" : 2,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_dataframe"
+}

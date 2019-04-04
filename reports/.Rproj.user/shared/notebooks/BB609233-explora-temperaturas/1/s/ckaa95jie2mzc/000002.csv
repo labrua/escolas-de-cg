@@ -1,0 +1,29 @@
+"0","enem = read_csv(""../dados_cruzados/sem_escolas_privadas/enem.csv"")"
+"2","Parsed with column specification:
+cols(
+  .default = col_double(),
+  NO_ESCOLA_x = [31mcol_character()[39m,
+  DT_ANO_LETIVO_INICIO = [34mcol_datetime(format = """")[39m,
+  DT_ANO_LETIVO_TERMINO = [34mcol_datetime(format = """")[39m,
+  TP_CATEGORIA_ESCOLA_PRIVADA = [33mcol_logical()[39m,
+  IN_CONVENIADA_PP = [33mcol_logical()[39m,
+  TP_CONVENIO_PODER_PUBLICO = [33mcol_logical()[39m,
+  IN_MANT_ESCOLA_PRIVADA_EMP = [33mcol_logical()[39m,
+  IN_MANT_ESCOLA_PRIVADA_ONG = [33mcol_logical()[39m,
+  IN_MANT_ESCOLA_PRIVADA_SIND = [33mcol_logical()[39m,
+  IN_MANT_ESCOLA_PRIVADA_SIST_S = [33mcol_logical()[39m,
+  IN_MANT_ESCOLA_PRIVADA_S_FINS = [33mcol_logical()[39m,
+  NU_CNPJ_ESCOLA_PRIVADA = [33mcol_logical()[39m,
+  NU_CNPJ_MANTENEDORA = [33mcol_logical()[39m,
+  CO_ESCOLA_SEDE_VINCULADA = [33mcol_logical()[39m,
+  TP_OCUPACAO_GALPAO = [33mcol_logical()[39m,
+  TP_INDIGENA_LINGUA = [33mcol_logical()[39m,
+  CO_LINGUA_INDIGENA = [33mcol_logical()[39m,
+  SG_UF_ESCOLA = [31mcol_character()[39m,
+  NO_MUNICIPIO_ESCOLA = [31mcol_character()[39m,
+  NO_ESCOLA_y = [31mcol_character()[39m
+  # ... with 4 more columns
+)
+"
+"2","See spec(...) for full column specifications.
+"

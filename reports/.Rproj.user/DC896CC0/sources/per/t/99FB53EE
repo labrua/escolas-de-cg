@@ -1,0 +1,29 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1554340912215.000,
+    "dirty" : false,
+    "encoding" : "",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "99FB53EE",
+    "lastKnownWriteTime" : 3344608208692969472,
+    "last_content_update" : 1554340912215,
+    "path" : null,
+    "project_path" : null,
+    "properties" : {
+        "cacheKey" : "7CF7FE21",
+        "caption" : "ideb_anos_finais",
+        "contentUrl" : "grid_resource/gridviewer.html?env=&obj=ideb_anos_finais&cache_key=7CF7FE21",
+        "displayedObservations" : "64",
+        "environment" : "",
+        "object" : "ideb_anos_finais",
+        "preview" : "0",
+        "totalObservations" : "64",
+        "variables" : "172"
+    },
+    "relative_order" : 3,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_dataframe"
+}

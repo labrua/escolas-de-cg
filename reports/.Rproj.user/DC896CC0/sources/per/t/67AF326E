@@ -1,0 +1,22 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1554400890826.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "3006407715",
+    "id" : "67AF326E",
+    "lastKnownWriteTime" : 1554400941,
+    "last_content_update" : 1554400941067,
+    "path" : "~/Desktop/escolas-de-cg/reports/analise_das_notas.Rmd",
+    "project_path" : "analise_das_notas.Rmd",
+    "properties" : {
+        "cursorPosition" : "9,90",
+        "scrollLine" : "0"
+    },
+    "relative_order" : 3,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_markdown"
+}
