@@ -2,27 +2,39 @@
 library(tidyverse)
 library(lubridate)
 library(ggbeeswarm)
+library(dplyr)
+library(data.table)
 theme_set(theme_bw())
 ```
 
-```{r read}
+```{r echo=FALSE, message=FALSE, warning=FALSE}
 enem = read_csv("../dados_cruzados/sem_escolas_privadas/enem.csv")
 ideb_anos_finais = read_csv("../dados_cruzados/sem_escolas_privadas/ideb_anos_finais.csv")
 ideb_anos_iniciais = read_csv("../dados_cruzados/sem_escolas_privadas/ideb_anos_iniciais.csv")
 ```
 
 ```{r}
+
+enem = enem %>%
+    filter(TP_SITUACAO_FUNCIONAMENTO == 1)
+
 enem %>%
-    ggplot(aes(x = NU_MEDIA_TOTAL)) +
-    geom_histogram(binwidth = 10, color = "#F6511D", fill = "white")
+    ggplot(aes(x = NU_MEDIA_TOTAL/100)) +
+    geom_histogram(breaks=seq(0, 10, by = 1), binwidth = 10, color = "#F6511D", fill = "white")
 
 ```
 ```{r}
+ideb_anos_finais = ideb_anos_finais %>%
+    filter(TP_SITUACAO_FUNCIONAMENTO == 1)
+
 ideb_anos_finais %>%
     ggplot(aes(x = NU_NOTA)) +
     geom_histogram(breaks=seq(0, 10, by = 1),binwidth = 10, color = "#F6511D", fill = "white")
 ```
 ```{r}
+ideb_anos_iniciais = ideb_anos_iniciais %>%
+    filter(TP_SITUACAO_FUNCIONAMENTO == 1)
+
 ideb_anos_iniciais %>%
     ggplot(aes(x = NU_NOTA)) +
     geom_histogram(breaks=seq(0, 10, by = 1),binwidth = 10, color = "#F6511D", fill = "white")

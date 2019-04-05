@@ -1,0 +1,40 @@
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+library(tidyverse)
+library(dplyr)
+theme_set(theme_bw())
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+enem = read_csv("../dados_cruzados/sem_escolas_privadas/enem.csv")
+ideb_anos_finais = read_csv("../dados_cruzados/sem_escolas_privadas/ideb_anos_finais.csv")
+ideb_anos_iniciais = read_csv("../dados_cruzados/sem_escolas_privadas/ideb_anos_iniciais.csv")
+tcu = read_csv("../dados/TS_ESCOLA_2015_sem_escolas_privadas.csv")
+```
+
+```{r}
+tcu = tcu %>%
+    filter(TP_SITUACAO_FUNCIONAMENTO == 1 & !str_detect(NO_ESCOLA, "^CRECHE"))
+```
+
+```{r}
+ideb_1 = ideb_anos_iniciais %>%
+    filter(TP_SITUACAO_FUNCIONAMENTO == 1) %>%
+    select(CO_ESCOLA, NU_NOTA)
+
+ideb_2 = ideb_anos_finais %>%
+    filter(TP_SITUACAO_FUNCIONAMENTO == 1) %>%
+    select(CO_ESCOLA, NU_NOTA)
+
+output_1 = merge(ideb_1, ideb_2, by="CO_ESCOLA", all=TRUE)
+
+enem_1 = enem %>%
+    filter(TP_SITUACAO_FUNCIONAMENTO == 1) %>%
+    select(CO_ESCOLA, NU_MEDIA_TOTAL)
+
+output_2 = merge(output_1, enem_1, by="CO_ESCOLA", all=TRUE)
+```
+
+```{r}
+escolas_sem_nenhuma_avalicao = anti_join(tcu, output_2, by='CO_ESCOLA')
+```
+

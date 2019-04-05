@@ -1,3 +1,0 @@
-"0","ideb_anos_finais %>%"
-"0","    ggplot(aes(x = NU_NOTA)) +"
-"0","    geom_histogram(breaks=seq(0, 10, by = 1),binwidth = 10, color = ""#F6511D"", fill = ""white"")"
