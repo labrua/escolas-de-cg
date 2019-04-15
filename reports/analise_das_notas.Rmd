@@ -11,6 +11,7 @@ theme_set(theme_bw())
 enem = read_csv("../dados_cruzados/sem_escolas_privadas/enem.csv")
 ideb_anos_finais = read_csv("../dados_cruzados/sem_escolas_privadas/ideb_anos_finais.csv")
 ideb_anos_iniciais = read_csv("../dados_cruzados/sem_escolas_privadas/ideb_anos_iniciais.csv")
+ideb_ensino_medio = read_csv("../dados_cruzados/sem_escolas_privadas/ideb_ensino_medio.csv")
 ```
 
 ```{r}
@@ -20,7 +21,7 @@ enem = enem %>%
 
 enem %>%
     ggplot(aes(x = NU_MEDIA_TOTAL/100)) +
-    geom_histogram(breaks=seq(0, 10, by = 1), binwidth = 10, color = "#F6511D", fill = "white")
+    geom_histogram(breaks=seq(4, 7), binwidth = 10, color = "#F6511D", fill = "white")
 
 ```
 ```{r}
@@ -31,6 +32,16 @@ ideb_anos_finais %>%
     ggplot(aes(x = NU_NOTA)) +
     geom_histogram(breaks=seq(0, 10, by = 1),binwidth = 10, color = "#F6511D", fill = "white")
 ```
+c
+```{r}
+ideb_ensino_medio = ideb_ensino_medio %>%
+    filter(TP_SITUACAO_FUNCIONAMENTO == 1)
+
+ideb_ensino_medio %>%
+    ggplot(aes(x = NU_NOTA/10)) +
+    geom_histogram(breaks=seq(0, 10, by = 1),binwidth = 10, color = "#F6511D", fill = "white")
+```
+
 ```{r}
 ideb_anos_iniciais = ideb_anos_iniciais %>%
     filter(TP_SITUACAO_FUNCIONAMENTO == 1)

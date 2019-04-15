@@ -36,7 +36,6 @@ caminho_dados_de_escolas = pasta_dados + "TS_ESCOLA_2015.csv"
 caminho_dados_de_escolas_n_privadas = pasta_dados + "TS_ESCOLA_2015_sem_escolas_privadas.csv"
 
 
-
 ## Abrir csv do ENEM
 avaliacao = pd.read_csv(pasta_dados + "enem.csv")
 df_medias = avaliacao[["NU_MEDIA_CN","NU_MEDIA_CH","NU_MEDIA_LP","NU_MEDIA_MT","NU_MEDIA_RED"]]
@@ -76,3 +75,11 @@ abre_csv_e_cruza(caminho_dados_de_escolas_n_privadas, caminho_dados_finais_cruza
 ## Cruzamento entre avaliação e dados de infraestrutura para escolas dos anos inciais do IDEB considerando escolas privadas
 caminho_dados_finais_cruzados = considerando_privadas + "ideb_anos_iniciais.csv"
 abre_csv_e_cruza(caminho_dados_de_escolas, caminho_dados_finais_cruzados)
+
+
+## Só creches
+creches = pd.read_csv(caminho_dados_de_escolas)
+creches = creches[creches["NO_ESCOLA"].str.contains('CRECHE', regex=False)]
+
+creches.to_csv(considerando_privadas + "creches.csv", sep=',', index = False)
+creches.to_csv(desconsiderando_privadas + "creches.csv", sep=',', index = False)
