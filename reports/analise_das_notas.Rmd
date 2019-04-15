@@ -4,26 +4,53 @@ library(lubridate)
 library(ggbeeswarm)
 library(dplyr)
 library(data.table)
+library(plotly)
 theme_set(theme_bw())
 ```
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 enem = read_csv("../dados_cruzados/sem_escolas_privadas/enem.csv")
+enem_privadas = read_csv("../dados_cruzados/com_escolas_privadas/enem.csv")
 ideb_anos_finais = read_csv("../dados_cruzados/sem_escolas_privadas/ideb_anos_finais.csv")
 ideb_anos_iniciais = read_csv("../dados_cruzados/sem_escolas_privadas/ideb_anos_iniciais.csv")
-ideb_ensino_medio = read_csv("../dados_cruzados/sem_escolas_privadas/ideb_ensino_medio.csv")
 ```
 
 ```{r}
-
 enem = enem %>%
     filter(TP_SITUACAO_FUNCIONAMENTO == 1)
 
 enem %>%
-    ggplot(aes(x = NU_MEDIA_TOTAL/100)) +
-    geom_histogram(breaks=seq(4, 7), binwidth = 10, color = "#F6511D", fill = "white")
+    ggplot(aes(x = NU_MEDIA_TOTAL)) +
+    geom_histogram(binwidth = 10, color = "#F6511D", fill = "white")
+
+vis2 = enem %>%
+  ggplot(aes(y = NU_MEDIA_TOTAL, x = NU_ANO_CENSO, color = "#F6511D", text = paste("Nome:", NO_ESCOLA_x, "<br>Código:", CO_ESCOLA, "<br>Nota:", NU_MEDIA_TOTAL))) + 
+  geom_quasirandom(show.legend = FALSE) +
+  scale_y_continuous(trans = "sqrt")
+
+ggplotly(vis2, tooltip ="text")
 
 ```
+
+```{r}
+
+enem_privadas = enem_privadas %>%
+    filter(TP_SITUACAO_FUNCIONAMENTO == 1)
+
+enem_privadas %>%
+    ggplot(aes(x = NU_MEDIA_TOTAL)) +
+    geom_histogram(binwidth = 10, color = "#F6511D", fill = "white")
+
+vis2 = enem_privadas %>%
+  ggplot(aes(y = NU_MEDIA_TOTAL, x = NU_ANO_CENSO, color = "#F6511D", text = paste("Nome:", NO_ESCOLA_x, "<br>Código:", CO_ESCOLA, "<br>Nota:", NU_MEDIA_TOTAL))) + 
+  geom_quasirandom(show.legend = FALSE) +
+  scale_y_continuous(trans = "sqrt")
+
+ggplotly(vis2, tooltip ="text")
+
+```
+
+
 ```{r}
 ideb_anos_finais = ideb_anos_finais %>%
     filter(TP_SITUACAO_FUNCIONAMENTO == 1)
@@ -31,15 +58,13 @@ ideb_anos_finais = ideb_anos_finais %>%
 ideb_anos_finais %>%
     ggplot(aes(x = NU_NOTA)) +
     geom_histogram(breaks=seq(0, 10, by = 1),binwidth = 10, color = "#F6511D", fill = "white")
-```
-c
-```{r}
-ideb_ensino_medio = ideb_ensino_medio %>%
-    filter(TP_SITUACAO_FUNCIONAMENTO == 1)
 
-ideb_ensino_medio %>%
-    ggplot(aes(x = NU_NOTA/10)) +
-    geom_histogram(breaks=seq(0, 10, by = 1),binwidth = 10, color = "#F6511D", fill = "white")
+vis2 = ideb_anos_finais %>%
+  ggplot(aes(y = NU_NOTA, x = NU_ANO_CENSO, color = "#F6511D", text = paste("Nome:", NO_ESCOLA_x, "<br>Código:", CO_ESCOLA, "<br>Nota:", NU_NOTA))) + 
+  geom_quasirandom(show.legend = FALSE) +
+  scale_y_continuous(trans = "sqrt")
+
+ggplotly(vis2, tooltip ="text")
 ```
 
 ```{r}
@@ -49,4 +74,11 @@ ideb_anos_iniciais = ideb_anos_iniciais %>%
 ideb_anos_iniciais %>%
     ggplot(aes(x = NU_NOTA)) +
     geom_histogram(breaks=seq(0, 10, by = 1),binwidth = 10, color = "#F6511D", fill = "white")
+
+vis2 = ideb_anos_iniciais %>%
+  ggplot(aes(y = NU_NOTA, x = NU_ANO_CENSO, color = "#F6511D", text = paste("Nome:", NO_ESCOLA_x, "<br>Código:", CO_ESCOLA, "<br>Nota:", NU_NOTA))) + 
+  geom_quasirandom(show.legend = FALSE) +
+  scale_y_continuous(trans = "sqrt")
+
+ggplotly(vis2, tooltip ="text")
 ```
