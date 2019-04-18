@@ -26,8 +26,8 @@ def abre_csv_e_cruza(caminho_dados_de_escolas, caminho_dados_finais_cruzados):
 
 
 # Pastas
-pasta_dados = "../dados/"
-pasta_dados_cruzados = "../dados_cruzados/"
+pasta_dados = "../dados-brutos/"
+pasta_dados_cruzados = "../dados/"
 considerando_privadas = pasta_dados_cruzados + "com_escolas_privadas/"
 desconsiderando_privadas = pasta_dados_cruzados + "sem_escolas_privadas/"
 

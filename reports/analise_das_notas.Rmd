@@ -9,10 +9,10 @@ theme_set(theme_bw())
 ```
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
-enem = read_csv("../dados_cruzados/sem_escolas_privadas/enem.csv")
-enem_privadas = read_csv("../dados_cruzados/com_escolas_privadas/enem.csv")
-ideb_anos_finais = read_csv("../dados_cruzados/sem_escolas_privadas/ideb_anos_finais.csv")
-ideb_anos_iniciais = read_csv("../dados_cruzados/sem_escolas_privadas/ideb_anos_iniciais.csv")
+enem = read_csv(here::here("dados/sem_escolas_privadas/enem.csv"))
+enem_privadas = read_csv(here::here("dados/com_escolas_privadas/enem.csv"))
+ideb_anos_finais = read_csv(here::here("dados/sem_escolas_privadas/ideb_anos_finais.csv"))
+ideb_anos_iniciais = read_csv(here::here("dados/sem_escolas_privadas/ideb_anos_iniciais.csv"))
 ```
 
 ```{r}
