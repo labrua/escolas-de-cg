@@ -1,51 +1,71 @@
 # Escolas de Campina Grande
 
-Este repositório é relacionado à dados das escolas e suas respectivas avaliações na cidade de Campina Grande, PB.
+Dados e análises da distribuição e avaliação das escolas de Campina Grande - PB. 
 
-Finalidade: Esse repositório foi desenvolvido para uma proposta de pesquisa que visa investigar em diferentes regiões da cidade a quantidade e a qualidade de equipamentos urbanos relacionados à saúde, educação e transporte na esfera pública, para explorar se há correlação entre a oferta desses equipamentos e  população carcerária.
+Este repositório é uma tentativa de retratar a disponibilidade e qualidade da educação pública no ensino básico e médio em Campina Grande. Como os dados sobre disponibilidade e qualidade são criados com várias periodicidades, há algum desencontro na data de produção dos dados, e eles estão normalmente defasados. 
 
-<B> 1. Finalidade original e aplicação: </B>
+Neste repositório, usamos dados: 
+    * sobre as escolas de 2015
+    * sobre avaliação do ensino básico de 2017
+    * sobre avaliação do ensino médio de 2015
 
-Os dados existem com a intenção de mostrar a qualidade em cada instituição pública de ensino.
+A avaliação do ensino vem do Instituto Nacional de Estudos e Pesquisas Educacionais Anísio Teixeira (INEP). Essa avaliação é baseada no desempenho dos alunos na prova do Exame Nacional do Ensino Médio (ENEM) e no Índice de Desenvolvimento da Educação Básica (IDEB). O IDEB por sua vez é calculado por indicadores de aprendizagem extraídos de dois exames:
 
-<B> 2. História, padrões e formato: </B>
+1. o Sistema de Avaliação da Educação Básica (SAEB), composto pela Avaliação Nacional da Educação Básica (ANEB), Anresc/Prova Brasil e Avaliação Nacional da Alfabetização (ANA)
+2. De indicadores do Censo Escolar, ou seja, relacionado índice de aprovação dos alunos ao longo dos anos letivos.
 
-Os dados são foram disponibilizados em Comma-separated values (CSV).
 
-<B> 3. Contexto Organizacional: </B>
+## Organização
 
-Contextos organizacionais não afetam a natureza da qualidade dos dados.
+`dados-brutos/` dados vindos das fontes primárias que usamos: 
 
-<B> 4. Fluxo de trabalho: </B>
+  * `dados-brutos/TS_ESCOLA_2015.csv`: informações sobre infraestrutura e localização das escolas de CG, vindos de um repositório do TCU em comunicação privada.
+  * `dados-brutos/ideb_anos_iniciais.csv` e `dados-brutos/ideb_anos_finais.csv` : avaliações das escolas no ensino fundamental, vindos do INEP. 
+  * `dados-brutos/enem.csv`: desempenho das escolas que tem ensino médio no ENEM, vindos do INEP. 
 
-Inicialmente para tornar a pesquisa possível, foi necessário um levantamento de infraestrutura e de qualidade de serviços públicos educacionais. Diante dos dados, foi necessária uma etapa de refinamento dos mesmos. O objetivo é extrair dos dados brutos já coletados, informações específicas para a pesquisa. Com o produto final do refinamento, é feito um cruzamento, a fim de criar relações entre os mesmos.
+`dados/` dados filtrados e cruzados sobre as escolas de CG.
 
-A coleta de dados relacionados à localização e infraestrutura das escolas foi feita através das informações geradas pelo site do Tribunal de Contas da União (TCU). Já a coleta dos dados relacionados à qualidade do ensino foi feita através do Instituto Nacional de Estudos e Pesquisas Educacionais Anísio Teixeira (INEP), que determina o desempenho das escolas de ensino médio e fundamental. Tal avaliação é baseada no desempenho dos alunos na prova do Exame Nacional do Ensino Médio (ENEM) e no Índice de Desenvolvimento da Educação Básica (IDEB)
+`code/` código para importação e funções úteis às análises.
 
-O IDEB é calculado por indicadores de aprendizagem extraídos de dois exames:
+`reports/` análises em notebooks.
 
-01. o Sistema de Avaliação da Educação Básica (SAEB), composto pela Avaliação Nacional da Educação Básica (ANEB), Anresc/Prova Brasil e Avaliação Nacional da Alfabetização (ANA)
 
-02. De indicadores do Censo Escolar, ou seja, relacionado índice de aprovação dos alunos ao longo dos anos letivos.
+## Guia de uso
 
-Após a análise, foi realizado um cruzamento de dados através de Pandas, que é uma biblioteca de Python, específica para manipulação e análise de dados. Essa ferramenta foi escolhida baseado na confiabilidade da manipulação dos dados e na familiaridade com a tecnologia do pesquisador.
+### Por que esses dados foram criados
 
-<B> 5. O que você deve saber sobre os dados, incluindo limitações: </B>
+Esses dados foram coletados como parte de uma pesquisa do LabRua que investiga a quantidade e a qualidade de equipamentos urbanos relacionados à saúde, educação e transporte em diferentes partes da cidade. A pesquisa está interessada em examinar se há correlação entre a falta de equipamentos públicos e a população carcerária oriunda de diferentes regiões da cidade.
 
-A limitação dos dados é relacionado à falta de informações sobre algumas escolas, como por exemplo: localização e detalhes de sua infraestrutura.
+### História, padrões e formato
 
-<B> 6. Aplicações adicionais: </B>
+Os dados deste repositório estão em csvs. Foram criados assim em 2018, a partir de fontes primárias em csv e xls.
 
-Outras pessoas podem fazer uso desses dados com o objetivo de analisar a vitalidade urbana na cidade de Campina Grande.
+### Contexto Organizacional
 
-<B> 7. Apêndice - listagem de valores de campo, livro de códigos, etc. </B>
+O LabRua é um laboratório de pesquisa sem fins lucrativos. Os dados foram criados por estudantes e professores do LabRua e Lab Analytics da UFCG. Os dados de fontes primárias vem do INEP, órgão do MEC e portanto do Governo Federal e também do Tribunal de Contas da União. Os dados do TCU foram criados por um grupo de trabalho do TCU interessado em acompanhar a gestão de educação no Brasil, e são essencialmente dados do próprio MEC enriquecidos pela geolocalização das escolas. Os dados do MEC são criados com o intuito de acompanhar a qualidade pública da educação pública e privada em todo o Brasil. 
 
-Avaliação do Exame Nacional do Ensino Médio (ENEM) por escolas, através dos microdrados disponibilizados pelo Instituto Nacional de Estudos e Pesquisas Educacionais Anísio Teixeira (INEP) para a Universidade Federal de Campina Grande (UFCG) de 2005 à 2015:
-http://ufcg.edu.br/prt_ufcg/assessoria_imprensa/mostra_noticia.php?codigo=21692
+### Fluxo de trabalho
 
-Avaliação do Índice de Desenvolvimento de Educação Básica (IDEB) por escolas, através dos microdrados disponibilizados pelo Instituto Nacional de Estudos e Pesquisas Educacionais Anísio Teixeira (INEP) de 2005 à 2017:
-http://portal.inep.gov.br/web/guest/educacao-basica/ideb/resultados
+Dados da existência, localização e infraestrutura das escolas vem do TCU provavelmente através do georreferenciamento dos dados das escolas publicados pelo MEC. 
 
-<B> 8. Fontes / Reconhecimentos </B>
+Dados do INEP vem de: 
 
-Dados de infraestrutura das escolas: Dados obtidos através de requisições ao Tribunal de Contas da União (TCU) de 2015
+  * [Microdados do ENEM 2005-2015](http://download.inep.gov.br/microdados/enem_por_escola/2005_a_2015/microdados_enem_por_escola.zip) disponibilizados pelo ENEM e explicados por exemplo [neste link](http://ufcg.edu.br/prt_ufcg/assessoria_imprensa/mostra_noticia.php?codigo=21692). O zip no link possui um dicionário das variáveis.
+
+  * [Microdados do IDEB de 2005 a 2017](http://portal.inep.gov.br/web/guest/educacao-basica/ideb/resultados) publicados no portal do INEP.
+
+Esses dados foram filtrados para incluir apenas escolas de Campina Grande e cruzados com os dados do TCU com base nos nomes das escolas. 
+
+Os resultados destes cruzamentos estão nas pastas `dados/`.
+
+### O que você deve saber sobre os dados, incluindo limitações
+
+A geolocalização realizada pelo TCU parece ter sido a partir do endereço da escola, e está sujeita a erros. Há escolas que existem hoje e não encontramos nos dados, e provavelmente há escolas que não estão nos dados e existem. Os detalhes da infraestrutura das escolas são autodeclarados pelas escolas. 
+
+### Outros usos desses dados
+
+Ainda não conhecemos. Se você usá-los, entra em contato para listarmos aqui. 
+
+### Listagem de valores de campo, livro de códigos, etc.
+
+As variáveis estão explicadas em 
