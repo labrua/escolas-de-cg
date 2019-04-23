@@ -8,7 +8,6 @@ theme_set(theme_bw())
 enem = read_csv(here::here("dados/sem_escolas_privadas/enem.csv"))
 ideb_anos_finais = read_csv(here::here("dados/sem_escolas_privadas/ideb_anos_finais.csv"))
 ideb_anos_iniciais = read_csv(here::here("dados/sem_escolas_privadas/ideb_anos_iniciais.csv"))
-ideb_ensino_medio = read_csv(here::here("dados/sem_escolas_privadas/ideb_ensino_medio.csv"))
 tcu = read_csv(here::here("/dados-brutos/TS_ESCOLA_2015_sem_escolas_privadas.csv"))
 ```
 
@@ -34,18 +33,5 @@ enem_1 = enem %>%
     filter(TP_SITUACAO_FUNCIONAMENTO == 1) %>%
     select(CO_ESCOLA, NU_MEDIA_TOTAL)
 
-output_2_1 = merge(output_1, enem_1, by="CO_ESCOLA", all=TRUE)
+output_2 = merge(output_1, enem_1, by="CO_ESCOLA", all=TRUE)
 ```
-
-```{r}
-ideb_3 = ideb_ensino_medio %>%
-    filter(TP_SITUACAO_FUNCIONAMENTO == 1) %>%
-    select(CO_ESCOLA, NU_NOTA)
-
-output_2_2 = merge(output_1, ideb_3, by="CO_ESCOLA", all=TRUE)
-```
-
-```{r}
-escolas_sem_nenhuma_avalicao = anti_join(tcu, output_2, by='CO_ESCOLA')
-```
-
