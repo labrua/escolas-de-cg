@@ -52,7 +52,7 @@ Dados do INEP vem de:
 
   * [Microdados do ENEM 2005-2015](http://download.inep.gov.br/microdados/enem_por_escola/2005_a_2015/microdados_enem_por_escola.zip) disponibilizados pelo ENEM e explicados por exemplo [neste link](http://ufcg.edu.br/prt_ufcg/assessoria_imprensa/mostra_noticia.php?codigo=21692). O zip no link possui um dicionário das variáveis.
 
-  * [Microdados do IDEB de 2005 a 2017](http://portal.inep.gov.br/web/guest/educacao-basica/ideb/resultados) publicados no portal do INEP. Podem ser baixados os arquivos do ensino fundamental regular nos anos iniciais, ou seja, do primeiro ao quinto ano [neste link](http://download.inep.gov.br/educacao_basica/portal_ideb/planilhas_para_download/2017) e dos anos finais, ou seja, do quinto ao nono [neste link](http://download.inep.gov.br/educacao_basica/portal_ideb/planilhas_para_download/2017/)
+  * [Microdados do IDEB de 2005 a 2017](http://portal.inep.gov.br/web/guest/educacao-basica/ideb/resultados) publicados no portal do INEP. Podem ser baixados os arquivos do ensino fundamental regular nos anos iniciais, ou seja, do primeiro ao quinto ano [neste link](http://download.inep.gov.br/educacao_basica/portal_ideb/planilhas_para_download/2017) e dos anos finais, ou seja, do quinto ao nono ano [neste link](http://download.inep.gov.br/educacao_basica/portal_ideb/planilhas_para_download/2017/)
 
 Esses dados foram filtrados para incluir apenas escolas de Campina Grande e cruzados com os dados do TCU com base nos nomes das escolas. 
 
