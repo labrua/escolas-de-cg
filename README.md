@@ -68,4 +68,4 @@ Ainda não conhecemos. Se você usá-los, entra em contato para listarmos aqui.
 
 ### Listagem de valores de campo, livro de códigos, etc.
 
-As variáveis estão explicadas em 
+As variáveis estão explicadas [aqui](https://github.com/labrua/escolas-de-cg/blob/master/dicionario_microdados_censo_2016.pdf)
