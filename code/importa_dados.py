@@ -14,12 +14,11 @@ def abre_csv_e_cruza(caminho_dados_de_escolas, caminho_dados_finais_cruzados):
 
 	for esc in nomes_escolas:
 		df_escola = avaliacao[avaliacao["CO_ESCOLA"] == esc] ## PEGA O DATAFRAME FILTRADO PELA ESCOLA
-		ano_recente = df_escola["NU_ANO"].argmax() ## ENCONTRA O INDICE NO DATAFRAME FILTRADO DO MAIOR ANO
+		ano_recente = df_escola["NU_ANO"].idxmax() ## ENCONTRA O INDICE NO DATAFRAME FILTRADO DO MAIOR ANO
 		linha = df_escola.loc[[ano_recente]] ## PEGA A LINHA DO INDICE
 		avaliacao_df = avaliacao_df.append(linha) ## ADICIONA ESSA LINHA NO NOVO DATAFRAME
 
-	avaliacao_geo = pd.merge(tcu, avaliacao_df, on='CO_ESCOLA', how='outer') ## Faz o cruzamento
-	avaliacao_geo = avaliacao_geo[np.isfinite(avaliacao_geo["NU_ANO"])] ## Tira dados que não estão disponíveis
+	avaliacao_geo = pd.merge(tcu, avaliacao_df, on='CO_ESCOLA', how='inner') ## Faz o cruzamento
 	
 	avaliacao_geo.to_csv(caminho_dados_finais_cruzados, sep=',', index = False) ## Cria novo csv
 
@@ -34,6 +33,7 @@ desconsiderando_privadas = pasta_dados_cruzados + "sem_escolas_privadas/"
 # Caminho dos dados de infraestrutura
 caminho_dados_de_escolas = pasta_dados + "TS_ESCOLA_2015.csv"
 caminho_dados_de_escolas_n_privadas = pasta_dados + "TS_ESCOLA_2015_sem_escolas_privadas.csv"
+
 
 
 ## Abrir csv do ENEM
@@ -75,6 +75,7 @@ abre_csv_e_cruza(caminho_dados_de_escolas_n_privadas, caminho_dados_finais_cruza
 ## Cruzamento entre avaliação e dados de infraestrutura para escolas dos anos inciais do IDEB considerando escolas privadas
 caminho_dados_finais_cruzados = considerando_privadas + "ideb_anos_iniciais.csv"
 abre_csv_e_cruza(caminho_dados_de_escolas, caminho_dados_finais_cruzados)
+
 
 
 ## Só creches
