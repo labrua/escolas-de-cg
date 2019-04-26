@@ -16,38 +16,25 @@ ideb_anos_iniciais = read_csv(here::here("dados/sem_escolas_privadas/ideb_anos_i
 ```
 
 ```{r}
-enem = enem %>%
-    filter(TP_SITUACAO_FUNCIONAMENTO == 1)
-
 enem %>%
     ggplot(aes(x = NU_MEDIA_TOTAL)) +
     geom_histogram(binwidth = 10, color = "#F6511D", fill = "white")
-
-vis2 = enem %>%
-  ggplot(aes(y = NU_MEDIA_TOTAL, x = NU_ANO_CENSO, color = "#F6511D", text = paste("Nome:", NO_ESCOLA_x, "<br>Código:", CO_ESCOLA, "<br>Nota:", NU_MEDIA_TOTAL))) + 
-  geom_quasirandom(show.legend = FALSE) +
-  scale_y_continuous(trans = "sqrt")
-
-ggplotly(vis2, tooltip ="text")
-
 ```
 
 ```{r}
-
-enem_privadas = enem_privadas %>%
-    filter(TP_SITUACAO_FUNCIONAMENTO == 1)
-
+por_dependencia = enem_privadas %>%
+  mutate(Dependência=ifelse(TP_DEPENDENCIA == 4, "Privada", "Pública"))
+  
 enem_privadas %>%
     ggplot(aes(x = NU_MEDIA_TOTAL)) +
     geom_histogram(binwidth = 10, color = "#F6511D", fill = "white")
 
-vis2 = enem_privadas %>%
-  ggplot(aes(y = NU_MEDIA_TOTAL, x = NU_ANO_CENSO, color = "#F6511D", text = paste("Nome:", NO_ESCOLA_x, "<br>Código:", CO_ESCOLA, "<br>Nota:", NU_MEDIA_TOTAL))) + 
+vis2 = por_dependencia %>%
+  ggplot(aes(y = NU_MEDIA_TOTAL, x = Dependência, color = Dependência, text = paste("Nome:", NO_ESCOLA_x, "<br>Código:", CO_ESCOLA, "<br>Nota:", NU_MEDIA_TOTAL))) + 
   geom_quasirandom(show.legend = FALSE) +
   scale_y_continuous(trans = "sqrt")
 
 ggplotly(vis2, tooltip ="text")
-
 ```
 
 
