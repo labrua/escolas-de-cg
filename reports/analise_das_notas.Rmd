@@ -17,55 +17,246 @@ ideb_anos_iniciais = read_csv(here::here("dados/sem_escolas_privadas/ideb_anos_i
 
 ```{r}
 enem %>%
-    ggplot(aes(x = NU_MEDIA_TOTAL)) +
-    geom_histogram(binwidth = 10, color = "#F6511D", fill = "white")
+  ggplot(aes(
+    x = NU_MEDIA_TOTAL
+      )
+    ) +
+  geom_histogram(
+    breaks=seq(450, 580, 10),
+    binwidth = 10,
+    color = "#F6511D",
+    fill = "white"
+    ) +
+  ggtitle("Quantidade de notas do ENEM (só escolas públicas)") +
+  scale_x_discrete(
+    name = "Médias",
+    limits=seq(450,580,10)
+    ) +
+  scale_y_discrete(
+    name = "Quantidade",
+    limits=seq(0,8,2)
+    )
+
+enem_privadas %>%
+  ggplot(
+    aes(
+      x = NU_MEDIA_TOTAL
+      )
+    ) +
+  geom_histogram(
+    breaks=seq(450, 690, by = 20),
+    binwidth = 10,
+    color = "#F6511D",
+    fill = "white"
+    ) +
+  ggtitle("Quantidade de notas do ENEM (incluindo escolas privadas)") +
+  scale_x_discrete(
+    name = "Médias",
+    limits=seq(450,690,20)
+    ) +
+  scale_y_discrete(
+    name = "Quantidade",
+    limits=seq(0,14,2)
+    )
+
+ideb_anos_finais %>%
+  ggplot(aes(
+      x = NU_NOTA)
+      ) +
+  geom_histogram(
+      breaks=seq(0, 10, by = 1),
+      binwidth = 10,
+      color = "#F6511D",
+      fill = "white"
+      ) +
+  ggtitle("Quantidade de notas do IDEB para fundamental II") +
+  scale_x_discrete(
+    name = "Médias",
+    limits=seq(0,10,1)
+    ) +
+  scale_y_discrete(
+    name = "Quantidade",
+    limits=seq(0,30,5)
+    )
+
+ideb_anos_iniciais %>%
+  ggplot(aes(
+    x = NU_NOTA)
+    ) +
+  geom_histogram(
+    breaks=seq(0, 10, by = 1),
+    binwidth = 10,
+    color = "#F6511D",
+    fill = "white"
+    ) +
+  ggtitle("Quantidade de notas do IDEB para fundamental I") +
+  scale_x_discrete(
+    name = "Médias",
+    limits=seq(0,10,1)
+    ) +
+  scale_y_discrete(
+    name = "Quantidade",
+    limits=seq(0,35,5)
+    )
 ```
+
 
 ```{r}
 por_dependencia = enem_privadas %>%
-  mutate(Dependência=ifelse(TP_DEPENDENCIA == 4, "Privada", "Pública"))
-  
-enem_privadas %>%
-    ggplot(aes(x = NU_MEDIA_TOTAL)) +
-    geom_histogram(binwidth = 10, color = "#F6511D", fill = "white")
+  mutate(
+    Dependência = ifelse(
+      TP_DEPENDENCIA == 4,
+      "Privada","Pública"
+      ),
+    Nota = NU_MEDIA_TOTAL
+    )
 
 vis2 = por_dependencia %>%
-  ggplot(aes(y = NU_MEDIA_TOTAL, x = Dependência, color = Dependência, text = paste("Nome:", NO_ESCOLA_x, "<br>Código:", CO_ESCOLA, "<br>Nota:", NU_MEDIA_TOTAL))) + 
-  geom_quasirandom(show.legend = FALSE) +
-  scale_y_continuous(trans = "sqrt")
+  ggplot(
+    aes(
+      y = Nota,
+      x = Dependência,
+      color = Dependência,
+      text = paste(
+        "Nome:", NO_ESCOLA_x,
+        "<br>Código:", CO_ESCOLA,
+        "<br>Nota:", NU_MEDIA_TOTAL
+        ))) + 
+  geom_quasirandom(
+    show.legend = FALSE
+    ) +
+  ggtitle("Médias do ENEM das escolas por dependência escolar")
 
-ggplotly(vis2, tooltip ="text")
+ggplotly(vis2, tooltip ="text") %>%
+  layout(showlegend=FALSE)
+
+por_dependencia = ideb_anos_finais %>%
+  mutate(
+    Dependência = ifelse(
+      TP_DEPENDENCIA == 4,
+      "Privada","Pública"
+      ),
+    Nota = NU_NOTA
+    )
+
+vis2 = por_dependencia %>%
+  ggplot(
+    aes(
+    y = Nota,
+    x = Dependência,
+    color = "#F6511D",
+    text = paste(
+      "Nome:", NO_ESCOLA_x,
+      "<br>Código:", CO_ESCOLA,
+      "<br>Nota:", NU_NOTA
+      ))) + 
+  geom_quasirandom(
+    show.legend = FALSE
+    ) +
+  ggtitle("Médias do IDEB do fundamental II por dependência escolar")
+
+ggplotly(vis2, tooltip ="text") %>%
+  layout(showlegend=FALSE)
+
+por_dependencia = ideb_anos_iniciais %>%
+  mutate(
+    Dependência = ifelse(
+      TP_DEPENDENCIA == 4,
+      "Privada","Pública"
+      ),
+    Nota = NU_NOTA
+    )
+
+vis2 = por_dependencia %>%
+  ggplot(
+    aes(
+    y = Nota,
+    x = Dependência,
+    color = "#F6511D",
+    text = paste(
+      "Nome:", NO_ESCOLA_x,
+      "<br>Código:", CO_ESCOLA,
+      "<br>Nota:", NU_NOTA
+      ))) + 
+  geom_quasirandom(
+    show.legend = FALSE
+    ) +
+  ggtitle("Médias do IDEB do fundamental I das escolas por dependência escolar")
+
+ggplotly(vis2, tooltip ="text") %>%
+  layout(showlegend=FALSE)
 ```
-
-
 ```{r}
-ideb_anos_finais = ideb_anos_finais %>%
-    filter(TP_SITUACAO_FUNCIONAMENTO == 1)
+vis = enem %>% 
+        top_n(10, NU_MEDIA_TOTAL) %>%
+        ggplot(aes(x= reorder(NO_ESCOLA_x, NU_MEDIA_TOTAL), y= NU_MEDIA_TOTAL,fill = NO_ESCOLA_x, alpha = .4,
+        text = paste(
+        "Nome:", NO_ESCOLA_x,
+        "<br>Código:", CO_ESCOLA,
+        "<br>Nota:", NU_MEDIA_TOTAL
+        ))) +
+        geom_col(show.legend = FALSE) +
+        xlab("Escola") +
+        ylab("Média") +
+        ggtitle("10 Melhores escolas públicas") +
+        coord_flip() +
+        scale_fill_brewer(palette = "Set3")
 
-ideb_anos_finais %>%
-    ggplot(aes(x = NU_NOTA)) +
-    geom_histogram(breaks=seq(0, 10, by = 1),binwidth = 10, color = "#F6511D", fill = "white")
+ggplotly(vis, tooltip="text") %>%
+  layout(showlegend=FALSE)
 
-vis2 = ideb_anos_finais %>%
-  ggplot(aes(y = NU_NOTA, x = NU_ANO_CENSO, color = "#F6511D", text = paste("Nome:", NO_ESCOLA_x, "<br>Código:", CO_ESCOLA, "<br>Nota:", NU_NOTA))) + 
-  geom_quasirandom(show.legend = FALSE) +
-  scale_y_continuous(trans = "sqrt")
+vis = enem_privadas %>% 
+        top_n(10, NU_MEDIA_TOTAL) %>%
+        ggplot(aes(x= reorder(NO_ESCOLA_x, NU_MEDIA_TOTAL), y= NU_MEDIA_TOTAL,fill = NO_ESCOLA_x, alpha = .4,
+        text = paste(
+        "Nome:", NO_ESCOLA_x,
+        "<br>Código:", CO_ESCOLA,
+        "<br>Nota:", NU_MEDIA_TOTAL
+        ))) +
+        geom_col(show.legend = FALSE) +
+        xlab("Escola") +
+        ylab("Média") +
+        ggtitle("10 Melhores escolas") +
+        coord_flip() +
+        scale_fill_brewer(palette = "Paired")
 
-ggplotly(vis2, tooltip ="text")
+ggplotly(vis, tooltip="text") %>%
+  layout(showlegend=FALSE)
+
+vis = ideb_anos_finais %>% 
+        top_n(10, NU_NOTA) %>%
+        ggplot(aes(x= reorder(NO_ESCOLA_x, NU_NOTA), y= NU_NOTA,fill = NO_ESCOLA_x, alpha = .4,
+        text = paste(
+        "Nome:", NO_ESCOLA_x,
+        "<br>Código:", CO_ESCOLA,
+        "<br>Nota:", NU_NOTA
+        ))) +
+        geom_col(show.legend = FALSE) +
+        xlab("Escola") +
+        ylab("Média") +
+        ggtitle("10 Melhores escolas públicas") +
+        coord_flip() +
+        scale_fill_brewer(palette = "Set3")
+
+ggplotly(vis, tooltip="text") %>%
+  layout(showlegend=FALSE)
+
+vis = ideb_anos_finais %>% 
+        top_n(10, NU_NOTA) %>%
+        ggplot(aes(x= reorder(NO_ESCOLA_x, NU_NOTA), y= NU_NOTA,fill = NO_ESCOLA_x, alpha = .4,
+        text = paste(
+        "Nome:", NO_ESCOLA_x,
+        "<br>Código:", CO_ESCOLA,
+        "<br>Nota:", NU_NOTA
+        ))) +
+        geom_col(show.legend = FALSE) +
+        xlab("Escola") +
+        ylab("Média") +
+        ggtitle("10 Melhores escolas públicas") +
+        coord_flip() +
+        scale_fill_brewer(palette = "Paired")
+
+ggplotly(vis, tooltip="text") %>%
+  layout(showlegend=FALSE)
 ```
 
-```{r}
-ideb_anos_iniciais = ideb_anos_iniciais %>%
-    filter(TP_SITUACAO_FUNCIONAMENTO == 1)
-
-ideb_anos_iniciais %>%
-    ggplot(aes(x = NU_NOTA)) +
-    geom_histogram(breaks=seq(0, 10, by = 1),binwidth = 10, color = "#F6511D", fill = "white")
-
-vis2 = ideb_anos_iniciais %>%
-  ggplot(aes(y = NU_NOTA, x = NU_ANO_CENSO, color = "#F6511D", text = paste("Nome:", NO_ESCOLA_x, "<br>Código:", CO_ESCOLA, "<br>Nota:", NU_NOTA))) + 
-  geom_quasirandom(show.legend = FALSE) +
-  scale_y_continuous(trans = "sqrt")
-
-ggplotly(vis2, tooltip ="text")
-```
