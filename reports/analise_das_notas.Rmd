@@ -24,7 +24,7 @@ enem %>%
   geom_histogram(
     breaks=seq(450, 580, 10),
     binwidth = 10,
-    color = "#F6511D",
+    color = "brown2",
     fill = "white"
     ) +
   ggtitle("Quantidade de notas do ENEM (só escolas públicas)") +
@@ -46,7 +46,7 @@ enem_privadas %>%
   geom_histogram(
     breaks=seq(450, 690, by = 20),
     binwidth = 10,
-    color = "#F6511D",
+    color = "brown2",
     fill = "white"
     ) +
   ggtitle("Quantidade de notas do ENEM (incluindo escolas privadas)") +
@@ -66,7 +66,7 @@ ideb_anos_finais %>%
   geom_histogram(
       breaks=seq(0, 10, by = 1),
       binwidth = 10,
-      color = "#F6511D",
+      color = "darkorange2",
       fill = "white"
       ) +
   ggtitle("Quantidade de notas do IDEB para fundamental II") +
@@ -81,15 +81,15 @@ ideb_anos_finais %>%
 
 ideb_anos_iniciais %>%
   ggplot(aes(
-    x = NU_NOTA)
-    ) +
+      x = NU_NOTA)
+      ) +
   geom_histogram(
-    breaks=seq(0, 10, by = 1),
-    binwidth = 10,
-    color = "#F6511D",
-    fill = "white"
-    ) +
-  ggtitle("Quantidade de notas do IDEB para fundamental I") +
+      breaks=seq(0, 10, by = 1),
+      binwidth = 10,
+      color = "darkgoldenrod2",
+      fill = "white"
+      ) +
+  ggtitle("Quantidade de notas do IDEB para fundamental II") +
   scale_x_discrete(
     name = "Médias",
     limits=seq(0,10,1)
@@ -107,14 +107,12 @@ por_dependencia = enem_privadas %>%
     Dependência = ifelse(
       TP_DEPENDENCIA == 4,
       "Privada","Pública"
-      ),
-    Nota = NU_MEDIA_TOTAL
-    )
+      ))
 
 vis2 = por_dependencia %>%
   ggplot(
     aes(
-      y = Nota,
+      y = NU_MEDIA_TOTAL,
       x = Dependência,
       color = Dependência,
       text = paste(
@@ -123,9 +121,12 @@ vis2 = por_dependencia %>%
         "<br>Nota:", NU_MEDIA_TOTAL
         ))) + 
   geom_quasirandom(
-    show.legend = FALSE
+    show.legend = FALSE,
+    alpha = .5
     ) +
-  ggtitle("Médias do ENEM das escolas por dependência escolar")
+  ylab("Média") +
+  ggtitle("Médias do ENEM das escolas por dependência escolar") +
+  scale_colour_manual(values = c("aquamarine2", "brown2"))
 
 ggplotly(vis2, tooltip ="text") %>%
   layout(showlegend=FALSE)
@@ -135,52 +136,45 @@ por_dependencia = ideb_anos_finais %>%
     Dependência = ifelse(
       TP_DEPENDENCIA == 4,
       "Privada","Pública"
-      ),
-    Nota = NU_NOTA
-    )
+      ))
 
 vis2 = por_dependencia %>%
   ggplot(
     aes(
-    y = Nota,
+    y = NU_NOTA,
     x = Dependência,
-    color = "#F6511D",
     text = paste(
       "Nome:", NO_ESCOLA_x,
       "<br>Código:", CO_ESCOLA,
       "<br>Nota:", NU_NOTA
       ))) + 
   geom_quasirandom(
-    show.legend = FALSE
+    show.legend = FALSE,
+    color = "darkorange2",
+    alpha = .5
     ) +
+  ylab("Média") +
   ggtitle("Médias do IDEB do fundamental II por dependência escolar")
 
 ggplotly(vis2, tooltip ="text") %>%
   layout(showlegend=FALSE)
 
-por_dependencia = ideb_anos_iniciais %>%
-  mutate(
-    Dependência = ifelse(
-      TP_DEPENDENCIA == 4,
-      "Privada","Pública"
-      ),
-    Nota = NU_NOTA
-    )
-
 vis2 = por_dependencia %>%
   ggplot(
     aes(
-    y = Nota,
+    y = NU_NOTA,
     x = Dependência,
-    color = "#F6511D",
     text = paste(
       "Nome:", NO_ESCOLA_x,
       "<br>Código:", CO_ESCOLA,
       "<br>Nota:", NU_NOTA
       ))) + 
   geom_quasirandom(
-    show.legend = FALSE
+    show.legend = FALSE,
+    color = "darkgoldenrod2",
+    alpha = .5
     ) +
+  ylab("Média") +
   ggtitle("Médias do IDEB do fundamental I das escolas por dependência escolar")
 
 ggplotly(vis2, tooltip ="text") %>%
@@ -248,7 +242,8 @@ vis = ideb_anos_finais %>%
         "Nome:", NO_ESCOLA_x,
         "<br>Código:", CO_ESCOLA,
         "<br>Nota:", NU_NOTA
-        ))) +
+        ))
+        ) +
         geom_col(show.legend = FALSE) +
         xlab("Escola") +
         ylab("Média") +
