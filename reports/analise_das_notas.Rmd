@@ -235,7 +235,7 @@ vis = ideb_anos_finais %>%
 ggplotly(vis, tooltip="text") %>%
   layout(showlegend=FALSE)
 
-vis = ideb_anos_finais %>% 
+vis = ideb_anos_iniciais %>% 
         top_n(10, NU_NOTA) %>%
         ggplot(aes(x= reorder(NO_ESCOLA_x, NU_NOTA), y= NU_NOTA,fill = NO_ESCOLA_x, alpha = .4,
         text = paste(
