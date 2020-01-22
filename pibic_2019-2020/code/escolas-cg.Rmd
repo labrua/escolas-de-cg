@@ -1,0 +1,328 @@
+---
+title: "escolas-cg"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r, include=FALSE}
+library(dplyr)
+library(ggplot2)
+library(ggcorrplot)
+library(maps)   # mapas simples, eixos, escala, cidades
+library(ggmap)  # Gmaps, OSM + mapas baseados em ggplot2
+library(leaflet)
+library(sf)
+library(sp)
+library(deldir)
+
+censo_cg <- readr::read_csv2(here::here("data/censo_cg.csv"), col_types = "ccccccciiinnnnnnnnnn") %>%
+  filter(Nome_do_bairro != "CAMPINA GRANDE (demais setores)") %>%
+  rename(CD_GEOCODI = Cod_setor) %>%
+  rename(hab_domicilio = "hab/domicílio")
+
+cg_raca <- readr::read_csv(here::here("data/cg_raca.csv"), col_types = "ciiiiiii") %>%
+  rename(CD_GEOCODI = Cod_setor) %>%
+  rename(situacao_setor = Situacao_setor) %>%
+  rename(residentes = "Pessoas residentes") %>%
+  rename(branca = V002) %>%
+  rename(preta = V003) %>%
+  rename(amarela = V004) %>%
+  rename(parda = V005) %>%
+  rename(indigena = V006)
+
+mapa_campina_bairros <- st_read(here::here("data/cg_bairros/cg_bairros.shp")) %>%
+  st_zm() %>%
+  as_Spatial()
+
+mapa_campina_setor <- st_read(here::here("data/cg_setor/CG.shp")) %>%
+  inner_join(censo_cg, by = "CD_GEOCODI") %>%
+  inner_join(cg_raca, by = "CD_GEOCODI") %>%
+  mutate(razao_preta_parda = (preta + parda)/residentes) %>%
+  filter(!is.na(NM_BAIRRO)) %>%
+  st_zm() %>%
+  as_Spatial()
+
+escolas_ideb_2017_cg <- readr::read_csv2(here::here("data/anos_iniciais_escolas_cg_2017.csv"))
+escolas_ideb_iniciais <- readr::read_csv(here::here("data/ideb_anos_iniciais.csv")) %>%
+  filter(!is.na(NU_LATITUDE)) %>%
+  filter(CO_ESCOLA != 25074636)
+escolas_ideb_finais <- readr::read_csv(here::here("data/ideb_anos_finais.csv")) %>%
+  filter(!is.na(NU_LATITUDE))
+escolas_enem <- readr::read_csv(here::here("data/enem.csv")) %>%
+  filter(is.na(TP_CATEGORIA_ESCOLA_PRIVADA)) %>%
+  filter(!is.na(NU_LATITUDE)) %>%
+  filter(!is.na(DT_ANO_LETIVO_INICIO))
+
+levels_mapa = levels(mapa_campina_bairros@data$NM_BAIRRO)
+levels_mapa[1] = "Acácio Figueiredo"
+levels_mapa[3] = "Araxá"
+levels_mapa[5] = "Bodocongó"
+levels_mapa[7] = "Catolé"
+levels_mapa[8] = "Centenário"
+levels_mapa[11] = "Conceição"
+levels_mapa[14] = "Dinamérica"
+levels_mapa[16] = "Estação Velha"
+levels_mapa[17] = "Itararé"
+levels_mapa[20] = "Jardim Quarenta"
+levels_mapa[23] = "José Pinheiro"
+levels_mapa[31] = "Nações"
+levels_mapa[32] = "Nova Brasília"
+levels_mapa[33] = "Novo Bodocongó"
+levels_mapa[37] = "Presidente Médici"
+levels_mapa[43] = "Santo Antônio"
+levels_mapa[44] = "Serrotão"
+levels_mapa[45] = "São José"
+levels_mapa[47] = "Três Irmãs"
+levels_mapa[48] = "Universitário"
+levels(mapa_campina_bairros@data$NM_BAIRRO) = levels_mapa
+
+getColor <- function(nota_obtida, nota_esperada) {
+  if(nota_obtida >= nota_esperada) {
+    green
+  } else {
+    red
+  }
+}
+
+red <- makeAwesomeIcon(icon = "school", markerColor = "red")
+green <- makeAwesomeIcon(icon = "school", markerColor = "green")
+
+escolas_anos_iniciais_vor_pts <- SpatialPointsDataFrame(cbind(escolas_ideb_iniciais$NU_LONGITUDE, escolas_ideb_iniciais$NU_LATITUDE),
+                                  escolas_ideb_iniciais, match.ID=TRUE)
+
+escolas_anos_finais_vor_pts <- SpatialPointsDataFrame(cbind(escolas_ideb_finais$NU_LONGITUDE, escolas_ideb_finais$NU_LATITUDE),
+                                  escolas_ideb_finais, match.ID=TRUE)
+
+escolas_enem_vor_pts <- SpatialPointsDataFrame(cbind(escolas_enem$NU_LONGITUDE, escolas_enem$NU_LATITUDE),
+                                  escolas_enem, match.ID=TRUE)
+
+SPointsDF_to_voronoi_SPolysDF <- function(sp) {
+  # tile.list extracts the polygon data from the deldir computation
+  vor_desc <- tile.list(deldir(sp@coords[,1], sp@coords[,2]))
+  lapply(1:(length(vor_desc)), function(i) {
+    # tile.list gets us the points for the polygons but we
+    # still have to close them, hence the need for the rbind
+    tmp <- cbind(vor_desc[[i]]$x, vor_desc[[i]]$y)
+    tmp <- rbind(tmp, tmp[1,])
+    
+    # now we can make the Polygon(s)
+    Polygons(list(Polygon(tmp)), ID=i)
+  }) -> vor_polygons
+  
+  # hopefully the caller passed in good metadata!
+  sp_dat <- sp@data
+  
+  # this way the IDs _should_ match up w/the data & voronoi polys
+  rownames(sp_dat) <- sapply(slot(SpatialPolygons(vor_polygons), 'polygons'), slot, 'ID')
+  SpatialPolygonsDataFrame(SpatialPolygons(vor_polygons),data=sp_dat)
+}
+
+escolas_anos_iniciais_vor <- SPointsDF_to_voronoi_SPolysDF(escolas_anos_iniciais_vor_pts)
+escolas_anos_iniciais_vor_df <- fortify(escolas_anos_iniciais_vor)
+
+escolas_anos_finais_vor <- SPointsDF_to_voronoi_SPolysDF(escolas_anos_finais_vor_pts)
+escolas_anos_finais_vor_df <- fortify(escolas_anos_finais_vor)
+
+escolas_enem_vor <- SPointsDF_to_voronoi_SPolysDF(escolas_enem_vor_pts)
+escolas_enem_vor_df <- fortify(escolas_enem_vor)
+```
+
+
+```{r}
+pal_renda <- colorQuantile("Blues", mapa_campina_setor$Renda, n = 7)
+
+leaflet(height = 700) %>%
+  addProviderTiles("Hydda.Base") %>%
+  addPolygons(data = mapa_campina_setor, weight = 2, opacity = 0.5, color = "#505151", fillOpacity = 0.7,
+              smoothFactor = 0.5, dashArray = "3", stroke = TRUE, fillColor = ~pal_renda(mapa_campina_setor$Renda)) %>%
+  addPolygons(data = escolas_anos_iniciais_vor, stroke = TRUE, color = "#ED212B", weight = 2,
+              opacity = 0.5, fill = FALSE, dashArray = "3", smoothFactor = 0.5) %>%
+  addPolygons(data = mapa_campina_bairros, weight = 1, opacity = 1, color = "#282828", fill = FALSE,
+              smoothFactor = 0.5, stroke = TRUE, popup = mapa_campina_bairros$Nome_do_bairro) %>%
+  addCircles(data=escolas_ideb_iniciais,
+             lng=~escolas_ideb_iniciais$NU_LONGITUDE, lat=~escolas_ideb_iniciais$NU_LATITUDE,
+             radius=~55, # size is in m for addCircles O_o
+             stroke=FALSE, opacity=1, fillColor="#FFE347", fillOpacity=1,
+             label = escolas_ideb_iniciais$NO_ESCOLA_y,
+             labelOptions = labelOptions(
+               style = list("font-weight" = "normal", padding = "3px 5px"),
+               textsize = "15px", direction = "auto")
+             )
+
+leaflet(height = 700) %>%
+  addProviderTiles("Hydda.Base") %>%
+  addPolygons(data = mapa_campina_setor, weight = 2, opacity = 0.5, color = "#505151", fillOpacity = 0.7,
+              smoothFactor = 0.5, dashArray = "3", stroke = TRUE, fillColor = ~pal_renda(mapa_campina_setor$Renda)) %>%
+  addPolygons(data = escolas_anos_finais_vor, stroke = TRUE, color = "#ED212B", weight = 2,
+              opacity = 0.5, fill = FALSE, dashArray = "3", smoothFactor = 0.5) %>%
+  addPolygons(data = mapa_campina_bairros, weight = 1, opacity = 1, color = "#282828", fill = FALSE,
+              smoothFactor = 0.5, stroke = TRUE, popup = mapa_campina_bairros$Nome_do_bairro) %>%
+  addCircles(data=escolas_ideb_finais,
+             lng=~escolas_ideb_finais$NU_LONGITUDE, lat=~escolas_ideb_finais$NU_LATITUDE,
+             radius=~55, # size is in m for addCircles O_o
+             stroke=FALSE, opacity=1, fillColor="#FFE347", fillOpacity=1,
+             label = escolas_ideb_finais$NO_ESCOLA_y,
+             labelOptions = labelOptions(
+               style = list("font-weight" = "normal", padding = "3px 5px"),
+               textsize = "15px", direction = "auto")
+             )
+
+leaflet(height = 700) %>%
+  addProviderTiles("Hydda.Base") %>%
+  addPolygons(data = mapa_campina_setor, weight = 2, opacity = 0.5, color = "#505151", fillOpacity = 0.7,
+              smoothFactor = 0.5, dashArray = "3", stroke = TRUE, fillColor = ~pal_renda(mapa_campina_setor$Renda)) %>%
+  addPolygons(data = escolas_enem_vor, stroke = TRUE, color = "#ED212B", weight = 2,
+              opacity = 0.5, fill = FALSE, dashArray = "3", smoothFactor = 0.5) %>%
+  addPolygons(data = mapa_campina_bairros, weight = 1, opacity = 1, color = "#282828", fill = FALSE,
+              smoothFactor = 0.5, stroke = TRUE, popup = mapa_campina_bairros$Nome_do_bairro) %>%
+  addCircles(data=escolas_enem,
+             lng=~escolas_enem$NU_LONGITUDE, lat=~escolas_enem$NU_LATITUDE,
+             radius=~55, # size is in m for addCircles O_o
+             stroke=FALSE, opacity=1, fillColor="#FFE347", fillOpacity=1,
+             label = escolas_enem$NO_ESCOLA_y,
+             labelOptions = labelOptions(
+               style = list("font-weight" = "normal", padding = "3px 5px"),
+               textsize = "15px", direction = "auto")
+             )
+```
+
+
+```{r}
+pal_densidade <- colorQuantile("Purples", mapa_campina_setor$hab_domicilio, n = 7)
+
+leaflet(height = 700) %>%
+  addProviderTiles("Hydda.Base") %>%
+  addPolygons(data = mapa_campina_setor, weight = 2, opacity = 0.5, color = "#505151", fillOpacity = 0.7,
+              smoothFactor = 0.5, dashArray = "3", stroke = TRUE, fillColor = ~pal_densidade(mapa_campina_setor$hab_domicilio)) %>%
+  addPolygons(data = escolas_anos_iniciais_vor, stroke = TRUE, color = "#ED212B", weight = 2,
+              opacity = 0.5, fill = FALSE, dashArray = "3", smoothFactor = 0.5) %>%
+  addPolygons(data = mapa_campina_bairros, weight = 1, opacity = 1, color = "#282828", fill = FALSE,
+              smoothFactor = 0.5, stroke = TRUE, popup = mapa_campina_bairros$Nome_do_bairro) %>%
+  addCircles(data=escolas_ideb_iniciais,
+             lng=~escolas_ideb_iniciais$NU_LONGITUDE, lat=~escolas_ideb_iniciais$NU_LATITUDE,
+             radius=~55, # size is in m for addCircles O_o
+             stroke=FALSE, opacity=1, fillColor="#FFE347", fillOpacity=1,
+             label = escolas_ideb_iniciais$NO_ESCOLA_y,
+             labelOptions = labelOptions(
+               style = list("font-weight" = "normal", padding = "3px 5px"),
+               textsize = "15px", direction = "auto")
+             )
+
+leaflet(height = 700) %>%
+  addProviderTiles("Hydda.Base") %>%
+  addPolygons(data = mapa_campina_setor, weight = 2, opacity = 0.5, color = "#505151", fillOpacity = 0.7,
+              smoothFactor = 0.5, dashArray = "3", stroke = TRUE, fillColor = ~pal_densidade(mapa_campina_setor$hab_domicilio)) %>%
+  addPolygons(data = escolas_anos_finais_vor, stroke = TRUE, color = "#ED212B", weight = 2,
+              opacity = 0.5, fill = FALSE, dashArray = "3", smoothFactor = 0.5) %>%
+  addPolygons(data = mapa_campina_bairros, weight = 1, opacity = 1, color = "#282828", fill = FALSE,
+              smoothFactor = 0.5, stroke = TRUE, popup = mapa_campina_bairros$Nome_do_bairro) %>%
+  addCircles(data=escolas_ideb_finais,
+             lng=~escolas_ideb_finais$NU_LONGITUDE, lat=~escolas_ideb_finais$NU_LATITUDE,
+             radius=~55, # size is in m for addCircles O_o
+             stroke=FALSE, opacity=1, fillColor="#FFE347", fillOpacity=1,
+             label = escolas_ideb_finais$NO_ESCOLA_y,
+             labelOptions = labelOptions(
+               style = list("font-weight" = "normal", padding = "3px 5px"),
+               textsize = "15px", direction = "auto")
+             )
+
+leaflet(height = 700) %>%
+  addProviderTiles("Hydda.Base") %>%
+  addPolygons(data = mapa_campina_setor, weight = 2, opacity = 0.5, color = "#505151", fillOpacity = 0.7,
+              smoothFactor = 0.5, dashArray = "3", stroke = TRUE, fillColor = ~pal_densidade(mapa_campina_setor$hab_domicilio)) %>%
+  addPolygons(data = escolas_enem_vor, stroke = TRUE, color = "#ED212B", weight = 2,
+              opacity = 0.5, fill = FALSE, dashArray = "3", smoothFactor = 0.5) %>%
+  addPolygons(data = mapa_campina_bairros, weight = 1, opacity = 1, color = "#282828", fill = FALSE,
+              smoothFactor = 0.5, stroke = TRUE, popup = mapa_campina_bairros$Nome_do_bairro) %>%
+  addCircles(data=escolas_enem,
+             lng=~escolas_enem$NU_LONGITUDE, lat=~escolas_enem$NU_LATITUDE,
+             radius=~55, # size is in m for addCircles O_o
+             stroke=FALSE, opacity=1, fillColor="#FFE347", fillOpacity=1,
+             label = escolas_enem$NO_ESCOLA_y,
+             labelOptions = labelOptions(
+               style = list("font-weight" = "normal", padding = "3px 5px"),
+               textsize = "15px", direction = "auto")
+             )
+```
+
+
+```{r}
+pal_raca <- colorQuantile("PuRd", mapa_campina_setor$razao_preta_parda, n = 7)
+
+leaflet(height = 700) %>%
+  addProviderTiles("Hydda.Base") %>%
+  addPolygons(data = mapa_campina_setor, weight = 2, opacity = 0.5, color = "#505151", fillOpacity = 0.7,
+              smoothFactor = 0.5, dashArray = "3", stroke = TRUE, fillColor = ~pal_raca(mapa_campina_setor$razao_preta_parda)) %>%
+  addPolygons(data = escolas_anos_iniciais_vor, stroke = TRUE, color = "#ED212B", weight = 2,
+              opacity = 0.5, fill = FALSE, dashArray = "3", smoothFactor = 0.5) %>%
+  addPolygons(data = mapa_campina_bairros, weight = 1, opacity = 1, color = "#282828", fill = FALSE,
+              smoothFactor = 0.5, stroke = TRUE, popup = mapa_campina_bairros$Nome_do_bairro) %>%
+  addCircles(data=escolas_ideb_iniciais,
+             lng=~escolas_ideb_iniciais$NU_LONGITUDE, lat=~escolas_ideb_iniciais$NU_LATITUDE,
+             radius=~55, # size is in m for addCircles O_o
+             stroke=FALSE, opacity=1, fillColor="#FFE347", fillOpacity=1,
+             label = escolas_ideb_iniciais$NO_ESCOLA_y,
+             labelOptions = labelOptions(
+               style = list("font-weight" = "normal", padding = "3px 5px"),
+               textsize = "15px", direction = "auto")
+             )
+
+leaflet(height = 700) %>%
+  addProviderTiles("Hydda.Base") %>%
+  addPolygons(data = mapa_campina_setor, weight = 2, opacity = 0.5, color = "#505151", fillOpacity = 0.7,
+              smoothFactor = 0.5, dashArray = "3", stroke = TRUE, fillColor = ~pal_raca(mapa_campina_setor$razao_preta_parda)) %>%
+  addPolygons(data = escolas_anos_finais_vor, stroke = TRUE, color = "#ED212B", weight = 2,
+              opacity = 0.5, fill = FALSE, dashArray = "3", smoothFactor = 0.5) %>%
+  addPolygons(data = mapa_campina_bairros, weight = 1, opacity = 1, color = "#282828", fill = FALSE,
+              smoothFactor = 0.5, stroke = TRUE, popup = mapa_campina_bairros$Nome_do_bairro) %>%
+  addCircles(data=escolas_ideb_finais,
+             lng=~escolas_ideb_finais$NU_LONGITUDE, lat=~escolas_ideb_finais$NU_LATITUDE,
+             radius=~55, # size is in m for addCircles O_o
+             stroke=FALSE, opacity=1, fillColor="#FFE347", fillOpacity=1,
+             label = escolas_ideb_finais$NO_ESCOLA_y,
+             labelOptions = labelOptions(
+               style = list("font-weight" = "normal", padding = "3px 5px"),
+               textsize = "15px", direction = "auto")
+             )
+
+leaflet(height = 700) %>%
+  addProviderTiles("Hydda.Base") %>%
+  addPolygons(data = mapa_campina_setor, weight = 2, opacity = 0.5, color = "#505151", fillOpacity = 0.7,
+              smoothFactor = 0.5, dashArray = "3", stroke = TRUE, fillColor = ~pal_raca(mapa_campina_setor$razao_preta_parda)) %>%
+  addPolygons(data = escolas_enem_vor, stroke = TRUE, color = "#ED212B", weight = 2,
+              opacity = 0.5, fill = FALSE, dashArray = "3", smoothFactor = 0.5) %>%
+  addPolygons(data = mapa_campina_bairros, weight = 1, opacity = 1, color = "#282828", fill = FALSE,
+              smoothFactor = 0.5, stroke = TRUE, popup = mapa_campina_bairros$Nome_do_bairro) %>%
+  addCircles(data=escolas_enem,
+             lng=~escolas_enem$NU_LONGITUDE, lat=~escolas_enem$NU_LATITUDE,
+             radius=~55, # size is in m for addCircles O_o
+             stroke=FALSE, opacity=1, fillColor="#FFE347", fillOpacity=1,
+             label = escolas_enem$NO_ESCOLA_y,
+             labelOptions = labelOptions(
+               style = list("font-weight" = "normal", padding = "3px 5px"),
+               textsize = "15px", direction = "auto")
+             )
+```
+
+
+```{r, include = FALSE}
+escolas_enem <- readr::read_csv2(here::here("data/enem-por-escola.csv"))
+escolas_2017_media <- escolas_ideb_iniciais %>%
+  filter(NU_ANO == "2017") %>%
+  mutate(acima_media = (NU_NOTA >= 4.8),
+         IN_INTERNET = if_else(IN_INTERNET == 0, FALSE, TRUE))
+
+escolas_2017_media %>%
+  ggplot(aes(x = NU_NOTA, fill = acima_media)) +
+  geom_bar() 
+
+escolas_2017_media %>%
+  group_by(IN_INTERNET) %>%
+  summarise(media = mean(NU_NOTA)) %>%
+  ggplot(aes(x = IN_INTERNET, y = media, fill = IN_INTERNET)) +
+  geom_bar(stat = "identity")
+```
